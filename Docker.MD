@@ -36,5 +36,8 @@ To get the image name visit [Docker Official Page](https://hub.docker.com/) and 
 Example: `docker run -d --name mysqlDB -e MY_SQL_ROOT_PASSWORD="helloworld" -e MY_SQL_DATABASE=dbtest mysql:8.0.17`
 * `docker rmi <image_id>` Removes the image from local storage. Please ensure that no container is running with this image during the execution of this command. As this doesn't implicitly stop and remove the container running using this image.
 * `docker prune` Unused images and containers are removed basedn on the inactivity.
-* `docker run -d --name <Container_name> -p <host_port_id>:<container_port_id>`
-
+* `docker run -d --name <Container_name> -p <host_port_id>:<container_port_id> <image_name>:<tag>` Portforwarding from container's default port to custom host's port. This is helpful when host machine has some service running on the default port of the container service port.
+* `docker volume create <volume_name>` Creates a logical volume for the containers in the host machine.
+* `docker volume inspect <volume_name>` To Inspect the created volume, especailly the mount point indicates where the volume is mounted on the host machine. 
+* `docker run -itd --name <container_name> -v <volumename>:<container_volume> <image_name>` Binds the host's logical volume to containers volume passed. Volumes can be shared by multiple containers thus resource utilization is possible. 
+* `docker `
