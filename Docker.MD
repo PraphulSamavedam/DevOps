@@ -20,7 +20,11 @@ This provides the complete list of the jobs included the terminated jobs.
 To get the image name visit [Docker Official Page](https://hub.docker.com/) and search for the pull syntax.
     
     Incase a specfic version look for its tag and run to get the pull commands
-* `docker pull <image_name>:<tag_id>` Fetches the tag version of the image.
+* `docker pull <image_name>:<tag_id>` Fetches the tag version of the image
 * `docker images` Lists the locally available images
-
-
+* `docker run <image_name>:<tag_id>`  Creates a container of the image with random container name.
+* `docker run -itd --name FirstInstance centos` Creates a container of centos with name FirstInstance. This container is created as interactive(-i), TTYL enabled(-t) and detached(-d) mode. Incase the `centos` image is not present locally docker will internally calls the first pulls the centos image and then creates the container.
+* `docker stop <container_id>` Only stops the container does not remove the container, contains are not removed. 
+* `docker rm <container_id>` This removes the container i.e. implicitly the container is first stopped and then removed. 
+* `docker stop <docker_id> && docker rm <container_id>` Docker commands can be combined using && operation between commands. This is simply `docker rm <container_id>`as mentioned it implicitly stops the container.
+* `docker exec -it <container_id> <command>` Runs the command on the container without requiring to explicitly login and run the script.
