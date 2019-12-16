@@ -38,6 +38,33 @@ Example: `docker run -d --name mysqlDB -e MY_SQL_ROOT_PASSWORD="helloworld" -e M
 * `docker prune` Unused images and containers are removed basedn on the inactivity.
 * `docker run -d --name <Container_name> -p <host_port_id>:<container_port_id> <image_name>:<tag>` Portforwarding from container's default port to custom host's port. This is helpful when host machine has some service running on the default port of the container service port.
 * `docker volume create <volume_name>` Creates a logical volume for the containers in the host machine.
-* `docker volume inspect <volume_name>` To Inspect the created volume, especailly the mount point indicates where the volume is mounted on the host machine. 
-* `docker run -itd --name <container_name> -v <volumename>:<container_volume> <image_name>` Binds the host's logical volume to containers volume passed. Volumes can be shared by multiple containers thus resource utilization is possible. 
-* `docker `
+* `docker volume inspect <volume_name>` To Inspect the created volume, especailly the mount point indicates where the volume is mounted on the host machine.
+* `docker run -itd --name <container_name> -v <volumename>:<container_volume> <image_name>` Binds the host's logical volume to containers volume passed. Volumes can be shared by multiple containers thus resource utilization is possible.
+* `docker network ls` Lists all the networks connected to Docker. The default network 'bridge'
+* `docker network inspect <network_id>` Inspects the docker network. 
+* `docker network create <network_name>` create a new network on the host machine system, starting with "br_"
+* `docker run -itd --name <container_name> --net <network_name> <image_name>` Spins a container with name "container_name" on the network "network name". This is same as below command
+* `docker run -itd --name <container_name> --network <network_name> <image_name>` Spins a container with name "container_name" on the network "network name". This is same as above command, inshort --net or --network mean the same.
+* `docker build <Dockerfile> -t <image_tag_id>` creates the custom image based on the dockerfile.Some standard image tags has the following nomenclature 'repository-url/name:version' 
+* `docker-compose -f <yaml_file> up --no-build -d` creates the container based on the yaml file without building the image as background process. 'up' indicates that the container is spun up and running.
+* `docker-compose -f <yaml_file> up` creates the container based on the yaml file by creating an image and container is up and running.
+
+**These are only few docker commands, More are available in the _[official docker documentation](https://docs.docker.com/)_. In case struck with any command and require help, type '--help'**
+
+### Custom Image
+As seen above, the custom images can be defined in 2 ways. 
+1. Dockerfile
+2. YAML based definition
+
+##### Dockerfile
+Dockerfile is built on the base images and some additional packages to run the code. Sample dockerfile is as follows:
+```
+FROM centos                  # Base Image
+MAINTAINER "praphulsamavedam@gmail.com"  # Maintainer indicates who maintains this custom image for reference, not mandatory but good practice.
+WORKDIR /usr/bin # sets the working directory of the project
+RUN yum -y install git # Installs the required packages on the top of the base image. 
+RUN yum -y install python # Installs the required packages on the top of the base image. 
+COPY *.py ./
+CMD ["python","run.py"]
+```
+
