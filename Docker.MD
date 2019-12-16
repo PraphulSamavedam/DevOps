@@ -48,8 +48,9 @@ Example: `docker run -d --name mysqlDB -e MY_SQL_ROOT_PASSWORD="helloworld" -e M
 * `docker build <Dockerfile> -t <image_tag_id>` creates the custom image based on the dockerfile.Some standard image tags has the following nomenclature 'repository-url/name:version' 
 * `docker-compose -f <yaml_file> up --no-build -d` creates the container based on the yaml file without building the image as background process(*-d*). 'up' indicates that the container is spun up and running.
 * `docker-compose -f <yaml_file> up` creates the container based on the yaml file by creating an image and container is up and running.
+* `docker login <full_url_of_organization's_docker>` The default registry where docker looks is _[https://hub.docker.com/](https://hub.docker.com/)_. In order to overwrite this default this command adds the absolute url as the primary url.
 
-**These are only few docker commands, More are available in the _[official docker documentation](https://docs.docker.com/)_. In case struck with any command and require help, type '--help'**
+**These are only few docker commands, More are available in the _[official docker documentation](https://docs.docker.com/)_. In case struck with any command and require help, type 'docker command --help'**
 
 ### Custom Image
 As seen above, the custom images can be defined in 2 ways. 
