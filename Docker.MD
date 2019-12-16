@@ -46,7 +46,7 @@ Example: `docker run -d --name mysqlDB -e MY_SQL_ROOT_PASSWORD="helloworld" -e M
 * `docker run -itd --name <container_name> --net <network_name> <image_name>` Spins a container with name "container_name" on the network "network name". This is same as below command
 * `docker run -itd --name <container_name> --network <network_name> <image_name>` Spins a container with name "container_name" on the network "network name". This is same as above command, inshort --net or --network mean the same.
 * `docker build <Dockerfile> -t <image_tag_id>` creates the custom image based on the dockerfile.Some standard image tags has the following nomenclature 'repository-url/name:version' 
-* `docker-compose -f <yaml_file> up --no-build -d` creates the container based on the yaml file without building the image as background process. 'up' indicates that the container is spun up and running.
+* `docker-compose -f <yaml_file> up --no-build -d` creates the container based on the yaml file without building the image as background process(*-d*). 'up' indicates that the container is spun up and running.
 * `docker-compose -f <yaml_file> up` creates the container based on the yaml file by creating an image and container is up and running.
 
 **These are only few docker commands, More are available in the _[official docker documentation](https://docs.docker.com/)_. In case struck with any command and require help, type '--help'**
@@ -56,15 +56,48 @@ As seen above, the custom images can be defined in 2 ways.
 1. Dockerfile
 2. YAML based definition
 
-##### Dockerfile
-Dockerfile is built on the base images and some additional packages to run the code. Sample dockerfile is as follows:
+##### 1.  Dockerfile
+Dockerfile is built on the base images and some additional packages to run the code. Sample dockerfile is as follows:(sentence prefixed with # is a comment in Dockerfile)
 ```
-FROM centos                  # Base Image
-MAINTAINER "praphulsamavedam@gmail.com"  # Maintainer indicates who maintains this custom image for reference, not mandatory but good practice.
-WORKDIR /usr/bin # sets the working directory of the project
+FROM centos                 
+# FROM <base_image> => Base image is taken for image creation
+MAINTAINER "praphulsamavedam@gmail.com"  
+# MAINTAINER <DL-email_name> =>  Maintainer indicates who maintains this custom image for reference, not mandatory but good practice.
+WORKDIR /usr/bin 
+# WORKDIR <absolute_path> => WORKDIR refers to working dir, this needs to be done for some images which have mandatory WORKDIR field.
 RUN yum -y install git # Installs the required packages on the top of the base image. 
-RUN yum -y install python # Installs the required packages on the top of the base image. 
+# RUN <command> => This is run during image creation, by add a layer over the existing image. Usually used to add necessary packages or softwares.
+RUN yum -y install python 
+# RUN <install_command> => This adds a layer over the existing image. 
 COPY *.py ./
-CMD ["python","run.py"]
+# COPY <source> <destination> => This is used to copy files from or to the container. Usually used to add the code repository for container.
+CMD ["python","launch.py"]
+# CMD [<binary>,<arg1>,<arg2>,...] => This is used to execute the binaries at the time of the container creation. Usually used to run the command at the container level, but is not converted into microservice.
+ENTRYPOINT ["python","main.py"]
+# ENTRYPOINT ["<binary>","<arg1>","<arg2>",...] =>This connverts the container to microservices and runs the binary with arguments. The container can be accessed only through montoring tools like splunk, docker logs,etc.
 ```
 
+##### 2.  YAML based definition
+YAMML means "YAML Ain't Markup Language" (a recursive acronym), is a human-readable data-serialization language. 
+```
+version: '3'
+
+services:
+    mysqldb:
+        image: mysql:8.0.18
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: example
+    
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+          - 9090:8080
+```
+This YAML has 2 services,    
+1. DB service (mySQL db)
+2. Adminer (HTML page based DB orchestrator)
+
+Under every service, we can pass the values simultaneously and can also overwrite the default values if required. Like in this case the default value of 8080 od the adminer service has been overwritten with value of 9090. 
